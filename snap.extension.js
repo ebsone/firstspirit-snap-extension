@@ -8,18 +8,15 @@
   * Listen for custom events emitted by Lightning Web Component rendering FirstSpirit content to
   * pass the preview ID to the TPP_SNAP library. Required for ContentCreator workflows.
   */
- 
  document.addEventListener('sto_com_fs_content_loaded', event => {
    if (typeof TPP_SNAP !== 'undefined' && event.detail && event.detail.previewId) {
      TPP_SNAP.setPreviewElement(event.detail.previewId);
    }
  });
  
- 
  /**
   * Register custom editing buttons for FirstSpirit Live Editor to support moving sections.
   */
- 
  if (typeof TPP_SNAP !== 'undefined') {
      // trigger cache clean reload 
      TPP_SNAP.onRerenderView(() => location.reload(true));
@@ -34,7 +31,7 @@
          .filter(({ status }) => status.elementType === 'Section');
      };
  
-     // Custom Button: Move Section Up / Down
+     // Custom Button: Move Section Up
      TPP_SNAP.registerButton({
          css: 'tpp-icon-arrow-up',
          getIcon: function({ $button }) {
@@ -61,6 +58,8 @@
          if (success) $node.parentNode.insertBefore($node, siblings[index - 1].$el);
          },
      });
+
+     // Custom Button: Move Section Down
      TPP_SNAP.registerButton({
          css: 'tpp-icon-arrow-down',
          getIcon: function({ $button }) {
