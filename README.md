@@ -7,7 +7,6 @@ snap.extension can be fetched by jsdelivr.net.
 Latest version for development purposes only:
 ```text
 https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension/snap.extension.js
-
 ```
 
 For QA and Production please use a stable version:
