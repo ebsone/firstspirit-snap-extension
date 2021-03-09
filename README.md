@@ -9,7 +9,7 @@ Latest version for development purposes only:
 https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension/snap.extension.js
 ```
 
-For QA and Production please use a stable version:
+For QA and Production please use a stable and minified version:
 ```text
-https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension@1.0/snap.extension.js
+https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension@1.1/snap.extension.min.js
 ```
