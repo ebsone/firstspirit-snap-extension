@@ -21,7 +21,11 @@ https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension/
 
 Latest version for development purposes only:
 ```text
+// get latest release
 https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension/snap.extension.js
+
+// get dev branch for development
+https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension@dev/snap.extension.js
 ```
 
 For QA and Production please use a stable and minified version:
