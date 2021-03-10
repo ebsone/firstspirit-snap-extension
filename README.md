@@ -1,5 +1,5 @@
 # firstspirit-snap-extension
-JavaScript to extend the configuration of the [TPP_SNAP library](https://docs.e-spirit.com/tpp/snap/index.html) (Third Party Preview) used for FirstSpirit ContentCreator of the Sto CEP platform. TPP_SNAP is a part of the FirstSpirit [Omnichannel Manager](https://docs.e-spirit.com/tpp/). Check current [Release Notes](https://docs.e-spirit.com/tpp/releasenotes/index.html.en).
+JavaScript to extend the configuration of the [TPP_SNAP library](https://docs.e-spirit.com/tpp/snap/index.html) (Third Party Preview) used for FirstSpirit ContentCreator on the Sto CEP platform. TPP_SNAP is a part of the FirstSpirit [Omnichannel Manager](https://docs.e-spirit.com/tpp/). Check current [Release Notes](https://docs.e-spirit.com/tpp/releasenotes/index.html.en).
 
 ## CDN Delivery
 snap.extension.js can be fetched by [jsdelivr.com](https://www.jsdelivr.com/).
