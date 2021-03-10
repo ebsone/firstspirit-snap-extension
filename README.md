@@ -4,7 +4,7 @@ JavaScript to extend the configuration of the [TPP_SNAP library](https://docs.e-
 ## CDN Delivery
 snap.extension can be fetched by [jsdelivr.com](https://www.jsdelivr.com/).
 
-´´´text
+```text
 // load release, commit, or branch from GitHub
 https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension@version/file
 
@@ -17,7 +17,7 @@ https://cdn.jsdelivr.net/gh/ebsone/firstspirit-snap-extension/snap.extension.min
 
 // add / at the end to get a directory listing
 https://cdn.jsdelivr.net/gh/jquery/jquery/
-´´´
+```
 
 Latest version for development purposes only:
 ```text
