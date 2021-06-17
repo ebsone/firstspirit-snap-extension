@@ -7,7 +7,6 @@ pipeline {
 
     stages {
         stage('Deploy to DEWEAP03') {
-            when { branch 'master' }
             environment {
                 SSH_CONNECTION = 'jenkins@212.184.115.17'
                 DEPLOYMENT_PATH = '/usr/share/nginx/html/firstspirit-snap-extension/'
