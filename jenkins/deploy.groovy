@@ -2,7 +2,7 @@ pipeline {
     agent any
     options {
         disableConcurrentBuilds()
-        buildDiscarder(logRotator(numToKeepStr: '2'))
+        buildDiscarder(logRotator(numToKeepStr: '10'))
     }
 
     stages {
@@ -13,7 +13,7 @@ pipeline {
             }
             steps {
                 // PUBLISH TO LIVE SERVER
-                sh "scp -i '~jenkins/.ssh/id_rsa' *.js ${SSH_CONNECTION}:${DEPLOYMENT_PATH}"
+                sh "scp -i '~jenkins/.ssh/id_rsa' -o StrictHostKeyChecking=no *.js ${SSH_CONNECTION}:${DEPLOYMENT_PATH}"
             }
         }
     }
