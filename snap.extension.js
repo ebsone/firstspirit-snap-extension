@@ -100,18 +100,6 @@
          }                
      });
  
-     // customize crop features to defined resolutions
-     const resolutions = ['W2400xH0','W2000xH0','W1476xH0','W1278xH0','W1025xH0','W768xH0','W576xH0'];
-     TPP_SNAP.overrideDefaultButton('crop', {
-     execute: async ({ $node, previewId }) => {
-         //const updatedImageUrl = await TPP_SNAP.cropImage(previewId, $node.dataset.fsImageResolution, false);
-         const updatedImageUrl = await TPP_SNAP.cropImage(previewId, resolutions, false);
-         if (updatedImageUrl) {
-             $node.dispatchEvent(new CustomEvent('imageUpdated', { 'detail': updatedImageUrl }));
-         }
-     }
-     });
- 
      // ContentCreator browsing - 28.07.2020
      TPP_SNAP.onRequestPreviewElement(async (previewId) => {
          // map page attribute to SF community page identifier
