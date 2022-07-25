@@ -89,49 +89,16 @@
  
      // deactivate default 'move' button due to incompatibility in SF frontend
      TPP_SNAP.overrideDefaultButton('move', {
-         "isVisible": () => false,
-         "isEnabled": () => false,
+         'isVisible': () => false,
+         'isEnabled': () => false,
      });
  
      // reload frontend after default 'workflows' button execution to update page status
      TPP_SNAP.overrideDefaultButton('workflows', {
-         "afterExecute": async () => {
+         'afterExecute': async () => {
          location.reload(true);
          }                
      });
- 
-     // customize crop features to defined resolutions
-     const resolutions = ["W500xH0","W1000xH0","W1500xH0"];
-     TPP_SNAP.overrideDefaultButton("crop", {
-     execute: async ({ $node, previewId }) => {
-         //const updatedImageUrl = await TPP_SNAP.cropImage(previewId, $node.dataset.fsImageResolution, false);
-         const updatedImageUrl = await TPP_SNAP.cropImage(previewId, resolutions, false);
-         if (updatedImageUrl) {
-             $node.dispatchEvent(new CustomEvent("imageUpdated", { "detail": updatedImageUrl }));
-         }
-     }
-     });
- 
-     // Custom Button: Create Dataset for defined datasource ids
-     [
-     { name: 'detail_page_news', template: 'news.news', label: 'Add news item' },
-     { name: 'detail_page_pressrelease', template: 'pressrelease.news', label: 'Add press release item' },
-     { name: 'detail_page_references', template: 'galleries.reference', label: 'Add reference item' },
-     { name: 'filter_page_brochures', template: 'news.brochures', label: 'Add brochure item' },
-     { name: 'filter_page_films', template: 'news.films', label: 'Add film item' }
-     ].forEach(({ name, template, label }) =>
-     TPP_SNAP.registerButton({
-         label,
-         css: 'tpp-icon-create-page',
-         isVisible: ({ status }) =>
-         name !== undefined &&
-         (status.name === name),
-         isEnabled: () => true,
-         execute: async () => {
-         await TPP_SNAP.createDataset(template, {});
-         }
-     })
-     );
  
      // ContentCreator browsing - 28.07.2020
      TPP_SNAP.onRequestPreviewElement(async (previewId) => {
