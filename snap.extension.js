@@ -89,25 +89,25 @@
  
      // deactivate default 'move' button due to incompatibility in SF frontend
      TPP_SNAP.overrideDefaultButton('move', {
-         "isVisible": () => false,
-         "isEnabled": () => false,
+         'isVisible': () => false,
+         'isEnabled': () => false,
      });
  
      // reload frontend after default 'workflows' button execution to update page status
      TPP_SNAP.overrideDefaultButton('workflows', {
-         "afterExecute": async () => {
+         'afterExecute': async () => {
          location.reload(true);
          }                
      });
  
      // customize crop features to defined resolutions
      const resolutions = ['W2400xH0','W2000xH0','W1476xH0','W1278xH0','W1025xH0','W768xH0','W576xH0'];
-     TPP_SNAP.overrideDefaultButton("crop", {
+     TPP_SNAP.overrideDefaultButton('crop', {
      execute: async ({ $node, previewId }) => {
          //const updatedImageUrl = await TPP_SNAP.cropImage(previewId, $node.dataset.fsImageResolution, false);
          const updatedImageUrl = await TPP_SNAP.cropImage(previewId, resolutions, false);
          if (updatedImageUrl) {
-             $node.dispatchEvent(new CustomEvent("imageUpdated", { "detail": updatedImageUrl }));
+             $node.dispatchEvent(new CustomEvent('imageUpdated', { 'detail': updatedImageUrl }));
          }
      }
      });
