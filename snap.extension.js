@@ -112,27 +112,6 @@
      }
      });
  
-     // Custom Button: Create Dataset for defined datasource ids
-     [
-     { name: 'detail_page_news', template: 'news.news', label: 'Add news item' },
-     { name: 'detail_page_pressrelease', template: 'pressrelease.news', label: 'Add press release item' },
-     { name: 'detail_page_references', template: 'galleries.reference', label: 'Add reference item' },
-     { name: 'filter_page_brochures', template: 'news.brochures', label: 'Add brochure item' },
-     { name: 'filter_page_films', template: 'news.films', label: 'Add film item' }
-     ].forEach(({ name, template, label }) =>
-     TPP_SNAP.registerButton({
-         label,
-         css: 'tpp-icon-create-page',
-         isVisible: ({ status }) =>
-         name !== undefined &&
-         (status.name === name),
-         isEnabled: () => true,
-         execute: async () => {
-         await TPP_SNAP.createDataset(template, {});
-         }
-     })
-     );
- 
      // ContentCreator browsing - 28.07.2020
      TPP_SNAP.onRequestPreviewElement(async (previewId) => {
          // map page attribute to SF community page identifier
