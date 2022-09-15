@@ -109,8 +109,13 @@
                  //history.pushState(json.uid, json.displayName, json.uid);
                  await TPP_SNAP.setPreviewElement(previewId);
                  // get URL prefix by project settings
-                 if (urlIdentifier != null) window.location.href = await TPP_SNAP.previewUrl() + urlIdentifier;  
-                 else	location.reload(true);
+                 if (urlIdentifier != null) {
+                    window.location.href = await TPP_SNAP.previewUrl() + urlIdentifier;
+                 } else if (urlIdentifier == '/') {
+                    window.location.href = await TPP_SNAP.previewUrl();
+                 } else	{
+                    location.reload(true);
+                 }
          } catch (e) {
              console.error(e);
          } 
