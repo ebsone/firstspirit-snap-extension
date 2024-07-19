@@ -114,6 +114,7 @@ if (typeof TPP_SNAP !== "undefined") {
 
   // ContentCreator browsing - 28.07.2020
   TPP_SNAP.onRequestPreviewElement(async (previewId) => {
+    console.log("onRequest");
     // map page attribute to SF community page identifier
     try {
       const json = await TPP_SNAP.renderElement(previewId);
@@ -126,8 +127,10 @@ if (typeof TPP_SNAP !== "undefined") {
       } else if (urlIdentifier != null) {
         window.location.href = (await TPP_SNAP.previewUrl()) + urlIdentifier;
       } else {
+        console.log("reload");
         location.reload(true);
       }
+      console.log("rerender");
       TPP_SNAP.triggerRerenderView();
     } catch (e) {
       console.error(e);
