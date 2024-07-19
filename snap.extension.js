@@ -128,6 +128,7 @@ if (typeof TPP_SNAP !== "undefined") {
       } else {
         location.reload(true);
       }
+      TPP_SNAP.triggerRerenderView();
     } catch (e) {
       console.error(e);
     }
