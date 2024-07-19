@@ -130,7 +130,8 @@ if (typeof TPP_SNAP !== "undefined") {
         console.log("reload");
         location.reload(true);
       }
-      console.log("rerender");
+      console.log("rerender 1");
+
       TPP_SNAP.triggerRerenderView();
     } catch (e) {
       console.error(e);
