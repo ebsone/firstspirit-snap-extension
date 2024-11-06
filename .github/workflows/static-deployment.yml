@@ -1,52 +1,38 @@
-# .github/workflows/deploy-to-pages.yml
-name: Deploy to GitHub Pages
-
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches:
-      - '**'     # Trigger on all branches
-  release:
-    types:
-      - created  # Trigger on release creation
-
+    branches: ["master"]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 jobs:
+  # Single deploy job since we're just deploying
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Determine deployment path based on event type
-          if [ "${{ github.event_name }}" == "release" ]; then
-            DEPLOY_PATH="releases/${{ github.event.release.tag_name }}"
-          else
-            DEPLOY_PATH="branches/${{ github.ref_name }}"
-          fi
-
-          # Define the output directory for GitHub Pages
-          OUTPUT_DIR="public"
-
-          # Create the deploy directory if it doesn't exist
-          mkdir -p "${OUTPUT_DIR}/${DEPLOY_PATH}"
-
-          # Use rsync to copy all files except the 'public' directory itself
-          rsync -av --exclude="${OUTPUT_DIR}" . "${OUTPUT_DIR}/${DEPLOY_PATH}/"
-
-          # Initialize a temporary Git repo in the output directory
-          cd $OUTPUT_DIR
-          git init
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy to GitHub Pages - $DEPLOY_PATH"
-          git push -f "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:gh-pages
+        id: deployment
+        uses: actions/deploy-pages@v4
