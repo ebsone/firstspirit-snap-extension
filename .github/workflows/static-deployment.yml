@@ -48,9 +48,11 @@ jobs:
 
       - name: Prepare Deployment Directory
         run: |
-          # Copy the contents into a unique folder for this branch or tag
+          # Create the target deployment directory
           mkdir -p "public/$DEPLOY_PATH"
-          cp -a . "public/$DEPLOY_PATH"
+          # Copy all contents except the 'public' directory itself to avoid recursion issues
+          shopt -s extglob
+          cp -r !(public) "public/$DEPLOY_PATH"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
