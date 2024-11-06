@@ -4,10 +4,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - '**'     # Triggers on all branches
+      - '**'     # Trigger on all branches
   release:
     types:
-      - created  # Triggers on release creation
+      - created  # Trigger on release creation
 
 jobs:
   deploy:
@@ -22,22 +22,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
       - name: Deploy to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get branch or tag name
+          # Determine deployment path based on event type
           if [ "${{ github.event_name }}" == "release" ]; then
             DEPLOY_PATH="releases/${{ github.event.release.tag_name }}"
           else
@@ -47,13 +36,13 @@ jobs:
           # Define the output directory for GitHub Pages
           OUTPUT_DIR="public"
 
-          # Create deploy directory if it doesn't exist
+          # Create the deploy directory if it doesn't exist
           mkdir -p "${OUTPUT_DIR}/${DEPLOY_PATH}"
 
-          # Copy build files to the appropriate subfolder
-          cp -r ./dist/* "${OUTPUT_DIR}/${DEPLOY_PATH}/"
+          # Copy all repository files to the appropriate subfolder
+          cp -r ./* "${OUTPUT_DIR}/${DEPLOY_PATH}/"
 
-          # Initialize a temporary Git repo to push to Pages
+          # Initialize a temporary Git repo in the output directory
           cd $OUTPUT_DIR
           git init
           git config user.name "github-actions[bot]"
