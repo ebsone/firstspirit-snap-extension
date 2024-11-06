@@ -1,32 +1,27 @@
-# Simple workflow for deploying static content to Pages
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting any branch
   push:
     branches: ["*"]
     tags:
-      - "*.*" # Triggers on tags that resemble versioning (e.g., v1.0.0)
-  # Allows you to run this workflow manually from the Actions tab
+      - "*.*"
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
-      name: github-pages
+      name: ${{ github.ref_name == 'dev' && 'github-pages-dev' || 'github-pages' }}
       url: ${{ steps.deployment.outputs.page_url }}
+      
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,7 +33,6 @@ jobs:
       - name: Determine Deploy Path
         id: vars
         run: |
-          # Determine if this is a branch or tag, and set DEPLOY_PATH accordingly
           if [ "${{ github.ref_type }}" == "branch" ]; then
             export DEPLOY_PATH="${{ github.ref_name }}"
           elif [ "${{ github.ref_type }}" == "tag" ]; then
@@ -48,16 +42,26 @@ jobs:
 
       - name: Prepare Deployment Directory
         run: |
-          # Create the target deployment directory
           mkdir -p "public/$DEPLOY_PATH"
-          # Copy all contents except the 'public' directory itself to avoid recursion issues
           shopt -s extglob
           cp -r !(public) "public/$DEPLOY_PATH"
+
+      - name: Generate Index.html
+        run: |
+          INDEX_PATH="public/index.html"
+          echo "<html><body><h1>Deployed Branches and Releases</h1><ul>" > $INDEX_PATH
+          
+          # Iterate through all directories in 'public' and add to the index
+          for dir in $(ls -d public/*/); do
+            DIR_NAME=$(basename "$dir")
+            echo "<li><a href='/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
+          done
+          
+          echo "</ul></body></html>" >> $INDEX_PATH
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload only the 'public' directory containing the structured deployment
           path: 'public'
 
       - name: Deploy to GitHub Pages
