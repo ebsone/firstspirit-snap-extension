@@ -1,4 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Simple workflow for deploying static content to Pages
 name: Deploy static content to Pages
 
 on:
@@ -6,7 +6,7 @@ on:
   push:
     branches: ["*"]
     tags:
-      - "v*.*.*" # This will trigger on any release tag like v1.0.0
+      - "v*.*.*" # Triggers on tags that resemble versioning (e.g., v1.0.0)
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -31,30 +31,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        
+
       - name: Determine Deploy Path
         id: vars
         run: |
-          # Use branch or tag name for subfolder
+          # Determine if this is a branch or tag, and set DEPLOY_PATH accordingly
           if [ "${{ github.ref_type }}" == "branch" ]; then
-            DEPLOY_PATH="${{ github.ref_name }}"
+            export DEPLOY_PATH="${{ github.ref_name }}"
           elif [ "${{ github.ref_type }}" == "tag" ]; then
-            DEPLOY_PATH="releases/${{ github.ref_name }}"
+            export DEPLOY_PATH="releases/${{ github.ref_name }}"
           fi
           echo "DEPLOY_PATH=$DEPLOY_PATH" >> $GITHUB_ENV
+
+      - name: Prepare Deployment Directory
+        run: |
+          # Copy the contents into a unique folder for this branch or tag
+          mkdir -p "public/$DEPLOY_PATH"
+          cp -a . "public/$DEPLOY_PATH"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository to the specified subfolder path
-          path: '.' 
+          # Upload only the 'public' directory containing the structured deployment
+          path: 'public'
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # Specify the deployment subfolder based on branch or tag
-          destination_path: ${{ env.DEPLOY_PATH }}
