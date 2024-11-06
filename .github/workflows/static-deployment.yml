@@ -39,8 +39,8 @@ jobs:
           # Create the deploy directory if it doesn't exist
           mkdir -p "${OUTPUT_DIR}/${DEPLOY_PATH}"
 
-          # Copy all repository files to the appropriate subfolder
-          cp -r ./* "${OUTPUT_DIR}/${DEPLOY_PATH}/"
+          # Use rsync to copy all files except the 'public' directory itself
+          rsync -av --exclude="${OUTPUT_DIR}" . "${OUTPUT_DIR}/${DEPLOY_PATH}/"
 
           # Initialize a temporary Git repo in the output directory
           cd $OUTPUT_DIR
