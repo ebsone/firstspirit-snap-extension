@@ -33,11 +33,8 @@ jobs:
       - name: Determine Deploy Path
         id: vars
         run: |
-          if [ "${{ github.ref_type }}" == "branch" ]; then
-            export DEPLOY_PATH="${{ github.ref_name }}"
-          elif [ "${{ github.ref_type }}" == "tag" ]; then
-            export DEPLOY_PATH="releases/${{ github.ref_name }}"
-          fi
+          # Use the same DEPLOY_PATH format for both branches and tags
+          export DEPLOY_PATH="${{ github.ref_name }}"
           echo "DEPLOY_PATH=$DEPLOY_PATH" >> $GITHUB_ENV
 
       - name: Prepare Deployment Directory
@@ -49,12 +46,12 @@ jobs:
       - name: Generate Index.html
         run: |
           INDEX_PATH="public/index.html"
-          echo "<html><body><h1>Deployed Branches and Releases</h1><ul>" > $INDEX_PATH
+          echo "<html><body><h1>Deployed Branches and Tags</h1><ul>" > $INDEX_PATH
           
           # Iterate through all directories in 'public' and add to the index
           for dir in $(ls -d public/*/); do
             DIR_NAME=$(basename "$dir")
-            echo "<li><a href='/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
+            echo "<li><a href='/firstspirit-snap-extension/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
           done
           
           echo "</ul></body></html>" >> $INDEX_PATH
