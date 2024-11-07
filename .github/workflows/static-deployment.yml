@@ -1,11 +1,7 @@
-name: Deploy static content to Pages
+name: Deploy All Branches and Tags to Pages
 
 on:
-  push:
-    branches: ["*"]
-    tags:
-      - "*.*"
-  workflow_dispatch:
+  workflow_dispatch: # Manual trigger for redeployment of all branches and tags
 
 permissions:
   contents: read
@@ -17,41 +13,53 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  deploy-all:
     environment:
-      name: ${{ github.ref_name == 'dev' && 'github-pages-dev' || 'github-pages' }}
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      
+
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all branches and tags
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Determine Deploy Path
-        id: vars
-        run: |
-          # Use the same DEPLOY_PATH format for both branches and tags
-          export DEPLOY_PATH="${{ github.ref_name }}"
-          echo "DEPLOY_PATH=$DEPLOY_PATH" >> $GITHUB_ENV
+      - name: Create Deployment Directory
+        run: mkdir -p public  # Initialize a public directory for deployments
 
-      - name: Prepare Deployment Directory
+      - name: Deploy Each Branch
         run: |
-          mkdir -p "public/$DEPLOY_PATH"
-          shopt -s extglob
-          cp -r !(public) "public/$DEPLOY_PATH"
+          # Loop through all branches and deploy each one
+          for branch in $(git branch -r | grep -v '\->' | grep -v 'HEAD' | sed 's/origin\///'); do
+            echo "Deploying branch: $branch"
+            git checkout $branch
+            mkdir -p "public/$branch"
+            cp -r . "public/$branch"
+          done
+
+      - name: Deploy Each Tag
+        run: |
+          # Loop through all tags and deploy each one
+          for tag in $(git tag); do
+            echo "Deploying tag: $tag"
+            git checkout $tag
+            mkdir -p "public/$tag"
+            cp -r . "public/$tag"
+          done
 
       - name: Generate Index.html
         run: |
           INDEX_PATH="public/index.html"
           echo "<html><body><h1>Deployed Branches and Tags</h1><ul>" > $INDEX_PATH
           
-          # Iterate through all directories in 'public' and add to the index
+          # Add each branch and tag to the index
           for dir in $(ls -d public/*/); do
             DIR_NAME=$(basename "$dir")
-            echo "<li><a href='/firstspirit-snap-extension/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
+            echo "<li><a href='firstspirit-snap-extension/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
           done
           
           echo "</ul></body></html>" >> $INDEX_PATH
