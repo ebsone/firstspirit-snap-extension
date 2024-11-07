@@ -34,26 +34,24 @@ jobs:
       - name: Deploy Each Branch
         run: |
           # Loop through all branches and deploy each one
-          bash -c 'for branch in $(git branch -r | grep -v '\->' | grep -v 'HEAD' | sed 's/origin\///'); do
+          for branch in $(git branch -r | grep -v '\->' | grep -v 'HEAD' | sed 's/origin\///'); do
             echo "Deploying branch: $branch"
             git checkout $branch
             mkdir -p "public/$branch"
-            # Copy all contents except the 'public' directory itself
-            shopt -s extglob
-            cp -r !(public) "public/$branch"
-          done'
+            # Use rsync to copy everything except the 'public' directory itself
+            rsync -av --exclude='public' . "public/$branch"
+          done
 
       - name: Deploy Each Tag
         run: |
           # Loop through all tags and deploy each one
-          bash -c 'for tag in $(git tag); do
+          for tag in $(git tag); do
             echo "Deploying tag: $tag"
             git checkout $tag
             mkdir -p "public/$tag"
-            # Copy all contents except the 'public' directory itself
-            shopt -s extglob
-            cp -r !(public) "public/$tag"
-          done'
+            # Use rsync to copy everything except the 'public' directory itself
+            rsync -av --exclude='public' . "public/$tag"
+          done
 
       - name: Generate Index.html
         run: |
