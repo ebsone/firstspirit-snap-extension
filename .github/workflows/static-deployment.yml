@@ -38,7 +38,9 @@ jobs:
             echo "Deploying branch: $branch"
             git checkout $branch
             mkdir -p "public/$branch"
-            cp -r . "public/$branch"
+            # Copy all contents except the 'public' directory itself
+            shopt -s extglob
+            cp -r !(public) "public/$branch"
           done
 
       - name: Deploy Each Tag
@@ -48,7 +50,9 @@ jobs:
             echo "Deploying tag: $tag"
             git checkout $tag
             mkdir -p "public/$tag"
-            cp -r . "public/$tag"
+            # Copy all contents except the 'public' directory itself
+            shopt -s extglob
+            cp -r !(public) "public/$tag"
           done
 
       - name: Generate Index.html
@@ -59,7 +63,7 @@ jobs:
           # Add each branch and tag to the index
           for dir in $(ls -d public/*/); do
             DIR_NAME=$(basename "$dir")
-            echo "<li><a href='firstspirit-snap-extension/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
+            echo "<li><a href='/firstspirit-snap-extension/${DIR_NAME}/'>${DIR_NAME}</a></li>" >> $INDEX_PATH
           done
           
           echo "</ul></body></html>" >> $INDEX_PATH
